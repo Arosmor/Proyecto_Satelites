@@ -1,0 +1,6 @@
+module-info.class
+es\amosrosado\satelites\entities\Satelite.class
+es\amosrosado\satelites\SecondaryController.class
+es\amosrosado\satelites\entities\Planeta.class
+es\amosrosado\satelites\App.class
+es\amosrosado\satelites\PrimaryController.class
