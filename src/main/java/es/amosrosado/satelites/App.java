@@ -39,7 +39,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
         
-        Satelite s = new Satelite(0, "Europa");
+        Satelite s = new Satelite(0, "Gaminedes");
         em.getTransaction().begin();
         em.persist(s);
         em.getTransaction().commit(); 

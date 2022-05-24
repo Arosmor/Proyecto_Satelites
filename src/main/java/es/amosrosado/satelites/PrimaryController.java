@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -31,15 +32,21 @@ public class PrimaryController implements Initializable {
     private TableColumn<Satelite, String> columnDistanciaPlaneta;
     @FXML
     private TableColumn<Satelite, String> columnPlaneta;
+    @FXML
     private TextField textFieldNombre;
+    @FXML
     private TextField textFieldDescubiertoPor;
+    @FXML
     private TextField textFieldDistanciaPlaneta;
+    @FXML
+    private TextField textFieldPlaneta;
+
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        columnNombre.setCellValueFactory(new PropertyValueFactory<>("Nombre"));
-        columnDescubiertoPor.setCellValueFactory(new PropertyValueFactory<>("Descubierto Por"));
-        columnDistanciaPlaneta.setCellValueFactory(new PropertyValueFactory<>("Distancia Planeta"));
+        columnNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        columnDescubiertoPor.setCellValueFactory(new PropertyValueFactory<>("descubiertoPor"));
+        columnDistanciaPlaneta.setCellValueFactory(new PropertyValueFactory<>("distanciaAlPlaneta"));
         columnPlaneta.setCellValueFactory(
             cellData -> {
                 SimpleStringProperty property = new SimpleStringProperty();
@@ -52,9 +59,9 @@ public class PrimaryController implements Initializable {
         tableViewSatelites.getSelectionModel().selectedItemProperty().addListener
                 ((observable, oldValue, newValue) -> {
                     sateliteSeleccionado = newValue;
-                    if (sateliteSeleccionado == null) {
+                    if (sateliteSeleccionado != null) {
                         textFieldNombre.setText(sateliteSeleccionado.getNombre());
-                        textFieldDescubiertoPor.setText(sateliteSeleccionado.getDescubiertoPor());
+                        textFieldDescubiertoPor.setText(sateliteSeleccionado.getDescubiertoPor()); 
                         textFieldDistanciaPlaneta.setText(sateliteSeleccionado.getDistanciaAlPlaneta());
 //                        textFieldPlaneta.setText(sateliteSeleccionado.getPlaneta.toString());
                     } else {
@@ -78,17 +85,37 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private void onActionButtonNuevo(ActionEvent event) {
+//        try {
+//            App.setRoot("secondary");
+//            SecondaryController secondaryController = (SecondaryController)App.fxmlLoader
+//        }
+//        
     }
 
     @FXML
     private void onActionButtonEditar(ActionEvent event) {
+        
     }
 
     @FXML
     private void onActionButtonSuprimir(ActionEvent event) {
+        
     }
 
     @FXML
     private void onActionButtonGuardar(ActionEvent event) {
+        if (sateliteSeleccionado != null) {
+            sateliteSeleccionado.setNombre(textFieldNombre.getText());
+            sateliteSeleccionado.setDescubiertoPor(textFieldDescubiertoPor.getText());
+            App.em.getTransaction().begin();
+            App.em.merge(sateliteSeleccionado);
+            App.em.getTransaction().commit();
+            
+            int numFilaSeleccionada = tableViewSatelites.getSelectionModel().getSelectedIndex();
+            tableViewSatelites.getItems().set(numFilaSeleccionada, sateliteSeleccionado);
+            TablePosition pos = new TablePosition(tableViewSatelites, numFilaSeleccionada, null);
+            tableViewSatelites.getFocusModel().focus(pos);
+            tableViewSatelites.requestFocus();
+        }
     }
 }
